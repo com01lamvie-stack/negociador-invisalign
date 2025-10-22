@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Negociador Invisalign 💎</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 40px auto;
+      background: #f7f9fc;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h1 { text-align: center; color: #007bff; }
+    label { font-weight: bold; display: block; margin-top: 12px; }
+    input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
+    button {
+      width: 100%; background: #007bff; color: white;
+      border: none; padding: 10px; border-radius: 6px; margin-top: 15px;
+      cursor: pointer;
+    }
+    button:hover { background: #0056b3; }
+    .resultado {
+      background: #e9f5ff;
+      margin-top: 20px; padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #b3daff;
+    }
+  </style>
+</head>
+<body>
+  <h1>Negociador Invisalign 💰</h1>
+
+  <label>Valor Lign (R$)</label>
+  <input id="valor_lign" type="number" value="7150">
+  <label>Valor Lamvie (R$)</label>
+  <input id="valor_lamvie" type="number" value="9500">
+  <label>Entrada Lign (R$)</label>
+  <input id="entrada_lign" type="number" value="0">
+  <label>Entrada Lamvie (R$)</label>
+  <input id="entrada_lamvie" type="number" value="0">
+  <label>Parcelas</label>
+  <input id="parcelas" type="number" value="14">
+  <label>Desconto Lign (%)</label>
+  <input id="desconto_lign" type="number" value="0">
+  <label>Desconto Lamvie (%)</label>
+  <input id="desconto_lamvie" type="number" value="0">
+
+  <button onclick="calcular()">Calcular</button>
+
+  <div id="resultado" class="resultado" style="display:none;"></div>
+
+  <script>
+    async function calcular() {
+      const dados = {
+        valor_lign: parseFloat(valor_lign.value),
+        valor_lamvie: parseFloat(valor_lamvie.value),
+        entrada_lign: parseFloat(entrada_lign.value),
+        entrada_lamvie: parseFloat(entrada_lamvie.value),
+        parcelas: parseInt(parcelas.value),
+        desconto_lign: parseFloat(desconto_lign.value),
+        desconto_lamvie: parseFloat(desconto_lamvie.value)
+      };
+
+      const res = await fetch("/otimizar", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(dados)
+      });
+      const json = await res.json();
+
+      resultado.style.display = "block";
+      resultado.innerHTML = `
+        <h3>Resultado:</h3>
+        <p><b>Total:</b> R$ ${json.total?.toFixed(2) || 0}</p>
+        <p><b>Parcela mensal:</b> R$ ${json.valor_parcela?.toFixed(2) || 0}</p>
+      `;
+    }
+  </script>
+</body>
+</html>
